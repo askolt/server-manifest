@@ -1,0 +1,32 @@
+---
+#Install Docker
+- hosts: "all"
+  become: true
+  vars:
+    nodejs: "14"
+    npm: "7.6.3"
+  tasks:
+  - name: add nodejs apt key
+    apt_key:
+      url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+      state: present
+
+  - name: add nodejs repository
+    apt_repository:
+      repo: deb https://deb.nodesource.com/node_14.x {{ ansible_lsb.codename }} main
+      state: present
+      update_cache: true
+
+  - name: "Install nodejs"
+    ansible.builtin.apt:
+      name: "nodejs"
+      state: "latest"
+      update_cache: true
+
+  #- name: "Install npm"
+  #  ansible.builtin.apt:
+  #    name: "npm"
+  #    state: "latest"
+  #    update_cache: true
+  - name: npm self-update
+    command: npm install npm@{{ npm }} -g
